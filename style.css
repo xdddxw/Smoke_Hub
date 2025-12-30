@@ -1,0 +1,538 @@
+/* 1. ГЛОБАЛЬНІ НАЛАШТУВАННЯ */
+:root {
+    --bg-dark: #0d0216;
+    --sidebar-bg: #1a0b2e;
+    --accent-pink: #e91e63;
+    --accent-yellow: #ffcc00;
+    --accent-blue: #00c6ff;
+    --card-bg: rgba(255, 255, 255, 0.05);
+}
+
+body {
+    background: radial-gradient(circle at top right, #1a0b2e, #0d0216);
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+    overflow-x: hidden;
+    transition: filter 2s ease-in-out; /* Для плавного димового ефекту */
+}
+
+/* 2. ШАПКА ТА НОВОРІЧНЕ ЛОГО */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+    position: relative;
+    display: inline-block;
+    font-weight: 900;
+    font-size: 22px;
+    background: linear-gradient(90deg, #ff0055, #00f2ff, #ff0055);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-move 3s linear infinite;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* ШАПКА САНТИ (ЕМОДЗІ) */
+.santa-hat-emoji {
+    position: absolute;
+    font-size: 26px;
+    top: -20px;
+    left: -12px;
+    transform: rotate(-15deg);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    z-index: 5;
+    pointer-events: none;
+    animation: hat-float 3s ease-in-out infinite;
+    -webkit-text-fill-color: initial; /* Щоб емодзі не був прозорим через градієнт лого */
+}
+
+@keyframes hat-float {
+    0%, 100% { transform: rotate(-15deg) translateY(0); }
+    50% { transform: rotate(-10deg) translateY(-3px); }
+}
+
+@keyframes gradient-move { to { background-position: 200% center; } }
+
+/* Гірлянда для головного заголовка */
+h1 {
+    font-size: 32px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin: 30px 0;
+    animation: garland 2s infinite alternate !important;
+}
+
+@keyframes garland {
+    0% { color: #ff0000; text-shadow: 0 0 15px rgba(255, 0, 0, 0.8); }
+    50% { color: #ffffff; text-shadow: 0 0 20px rgba(255, 255, 255, 0.9); }
+    100% { color: #00ff44; text-shadow: 0 0 15px rgba(0, 255, 68, 0.8); }
+}
+
+/* 3. ФІЛЬТРИ (ЗИМОВІ) */
+.filters {
+    display: flex; justify-content: center; gap: 10px; margin-bottom: 25px;
+    width: 100%; overflow-x: auto; padding: 10px 0;
+}
+.filters button {
+    flex: 0 0 auto; background: #222; color: white; border: 1px solid transparent;
+    padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s;
+}
+.filters button.active {
+    background: linear-gradient(135deg, #00c6ff, #0072ff) !important;
+    box-shadow: 0 0 15px rgba(0, 198, 255, 0.5) !important;
+    border: 1px solid #fff !important;
+}
+
+/* 4. КАТАЛОГ ТА КАРТКИ */
+.product-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 10px;
+}
+@media (min-width: 768px) {
+    .product-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+}
+
+.product-card {
+    background: var(--card-bg); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px;
+    padding: 15px; text-align: center; position: relative; transition: 0.3s;
+    overflow: hidden;
+}
+.product-card:hover {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2) !important;
+    border-color: #ffffff !important;
+}
+.product-card::after {
+    content: "❄️"; position: absolute; top: 5px; right: 5px; font-size: 14px; opacity: 0.3;
+}
+
+.product-img img { width: 100%; border-radius: 12px; aspect-ratio: 1/1; object-fit: cover; }
+.price { font-weight: 800; font-size: 15px; color: white; margin-top: 10px; display: block; }
+
+/* Наявність */
+.product-card.out-of-stock { opacity: 0.4; filter: grayscale(1); }
+.product-card.out-of-stock::after {
+    content: "РОЗКУПИЛИ"; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    background: rgba(233, 30, 99, 0.9); color: white;
+    padding: 5px 12px; font-weight: bold; border-radius: 5px; z-index: 10; opacity: 1;
+}
+
+/* 5. АДМІН-ПАНЕЛЬ (GLASSMORPHISM) */
+.dev-panel {
+    position: fixed; z-index: 10000;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+    opacity: 0; pointer-events: none;
+}
+.admin-glass {
+    background: rgba(13, 2, 22, 0.95) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--accent-pink) !important;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 1) !important;
+    width: 90%; max-width: 320px; border-radius: 24px; padding: 20px;
+}
+
+@media (min-width: 481px) {
+    .dev-panel { top: 20px; right: 20px; transform: translateX(120%); }
+    .dev-panel.active { transform: translateX(0); opacity: 1; pointer-events: auto; }
+}
+@media (max-width: 480px) {
+    .dev-panel { bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%); }
+    .dev-panel.active { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+}
+
+/* Редагування */
+.editing-active {
+    outline: 2px dashed var(--accent-pink) !important;
+    background: rgba(233, 30, 99, 0.15) !important;
+    box-shadow: 0 0 15px rgba(233, 30, 99, 0.4);
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+/* 6. ІНШЕ */
+#snow-canvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 9999;
+}
+
+#scrollTopBtn {
+    display: none; position: fixed; bottom: 30px; left: 30px; z-index: 999;
+    width: 45px; height: 45px; background: var(--accent-pink); color: white;
+    border: none; border-radius: 50%; font-size: 20px; cursor: pointer;
+    box-shadow: 0 0 15px var(--accent-pink); opacity: 0.8;
+}
+
+.mobile-nav {
+    position: fixed; top: 0; right: -100%; width: 280px; height: 100vh;
+    background: var(--bg-dark); z-index: 2000; padding: 40px 20px; transition: 0.4s;
+    border-left: 1px solid var(--accent-pink);
+}
+.mobile-nav.active { right: 0; }
+
+#smoke-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle, rgba(0,255,127,0.1) 0%, rgba(13,2,22,0.8) 100%);
+    backdrop-filter: blur(0px); opacity: 0; pointer-events: none; z-index: 9998;
+    transition: opacity 2s, backdrop-filter 2s;
+}
+#smoke-overlay.smoke-active { opacity: 1; backdrop-filter: blur(8px); }
+
+/* --- ПОВЕРНЕННЯ МЕНЮ-БУРГЕРА --- */
+.menu-toggle {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 2001; /* Щоб бути вище всього */
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+    transition: 0.3s;
+    box-shadow: 0 0 5px var(--accent-pink);
+}
+
+/* --- МОБІЛЬНЕ МЕНЮ (ЗИМОВИЙ СТИЛЬ) --- */
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Ховаємо за екран */
+    width: 280px;
+    height: 100vh;
+    background: rgba(13, 2, 22, 0.98);
+    backdrop-filter: blur(15px);
+    z-index: 2000;
+    padding: 40px 20px;
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 2px solid var(--accent-blue); /* Блакитний неон */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-nav.active {
+    right: 0; /* Виїжджає при активації */
+}
+
+.close-menu {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 35px;
+    cursor: pointer;
+    color: var(--accent-blue);
+    line-height: 1;
+}
+
+/* КНОПКИ В МЕНЮ */
+.menu-btn-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 50px;
+}
+
+.menu-item-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 15px;
+    border-radius: 15px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    transition: 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Кольори для кнопок меню */
+.btn-payment { border-color: #4CAF50; color: #4CAF50; }
+.btn-reviews { border-color: var(--accent-blue); color: var(--accent-blue); }
+.btn-tg { 
+    background: linear-gradient(90deg, #24a1de, #00c6ff) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.menu-item-btn:hover {
+    transform: scale(1.02);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Приховуємо всі категорії за замовчуванням */
+#cat-zalivka, #cat-prodazh, #cat-aktsii {
+    display: none;
+}
+
+/* Показуємо категорію, якщо в неї НЕМАЄ класу .hidden */
+#cat-zalivka:not(.hidden), 
+#cat-prodazh:not(.hidden), 
+#cat-aktsii:not(.hidden) {
+    display: block;
+}
+
+/* Додатковий примусовий клас для приховування */
+.hidden {
+    display: none !important;
+}
+
+/* --- ЦЕНТРУВАННЯ ФУТЕРА ТА ТЕКСТУ ВНИЗУ --- */
+footer {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Центрує по горизонталі */
+    align-items: center;
+    padding: 40px 0;
+    margin-top: 50px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.disclaimer {
+    width: 100%;
+    max-width: 600px; /* Обмежуємо ширину для кращого вигляду */
+    text-align: center !important; /* Примусово по центру */
+    font-size: 12px;
+    color: #666;
+    margin: 0 auto; /* Центрує сам блок */
+    line-height: 1.6;
+    padding: 0 20px;
+}
+
+/* Якщо текст "РОЗКУПИЛИ" на картках теж збоку */
+.product-card.out-of-stock::after {
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) rotate(-15deg) !important;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* ===== ADMIN SIDE PANEL ===== */
+.dev-trigger {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 55px;
+    height: 55px;
+    cursor: pointer;
+    z-index: 10000;
+}
+
+/* ПАНЕЛЬ */
+.dev-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 320px;
+    z-index: 10001;
+    pointer-events: none;
+    transform: translateX(120%);
+    transition: 0.35s ease;
+}
+
+/* АКТИВНА */
+.dev-panel.active {
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+/* КОНТЕНТ */
+.admin-box {
+    background: rgba(13, 2, 22, 0.97);
+    backdrop-filter: blur(16px);
+    border-radius: 22px;
+    padding: 20px;
+    border: 1px solid var(--accent-pink);
+    box-shadow: 0 0 40px rgba(0,0,0,0.9);
+    color: white;
+}
+
+/* ===== UI ===== */
+.admin-title {
+    text-align: center;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.admin-section {
+    margin-bottom: 18px;
+}
+
+.admin-section span {
+    font-size: 12px;
+    color: #aaa;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.admin-section small {
+    display: block;
+    font-size: 11px;
+    color: #777;
+    text-align: center;
+    margin-top: 6px;
+}
+
+/* INPUTS */
+.admin-box input,
+.admin-box select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+    background: #0f021a;
+    border: 1px solid #333;
+    color: white;
+    outline: none;
+}
+
+/* GRID */
+.admin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.admin-grid button {
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    cursor: pointer;
+}
+
+.admin-grid button.active {
+    background: var(--accent-pink);
+    border-color: white;
+}
+
+/* ACTIONS */
+.admin-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-main,
+.btn-save {
+    flex: 1;
+    padding: 12px;
+    border-radius: 16px;
+    border: none;
+    font-weight: bold;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    color: white;
+}
+
+.btn-alt,
+.btn-exit {
+    flex: 1;
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid #555;
+    background: transparent;
+    color: #aaa;
+}
+
+/* ПРИМУСОВО ВИМИКАЄМО БЛОКУВАННЯ ВІД ЕФЕКТІВ */
+#snow-canvas, #smoke-overlay, .snowflakes, #smoke-canvas {
+    pointer-events: none !important;
+}
+
+/* КОНТЕЙНЕР ПАНЕЛІ */
+.dev-panel {
+    position: fixed;
+    z-index: 999999 !important; /* Максимально можливий пріоритет */
+    left: 50%;
+    width: 95%;
+    max-width: 400px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none; /* За замовчуванням вимкнено */
+}
+
+/* ВІДКРИТА ПАНЕЛЬ */
+.dev-panel.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto !important; /* ВМИКАЄМО КЛІКИ ПРИ АКТИВАЦІЇ */
+}
+
+/* АДАПТИВ: ТЕЛЕФОН (ЗНИЗУ) */
+@media (max-width: 480px) {
+    .dev-panel {
+        bottom: env(safe-area-inset-bottom, 20px); /* Враховує полоску на iPhone */
+        transform: translate(-50%, 120%);
+    }
+    .dev-panel.active {
+        transform: translate(-50%, 0);
+    }
+}
+
+/* АДАПТИВ: ПК (СПРАВА) */
+@media (min-width: 481px) {
+    .dev-panel {
+        top: 20px;
+        right: 20px;
+        left: auto;
+        transform: translateX(120%);
+    }
+    .dev-panel.active {
+        transform: translateX(0);
+    }
+}
+
+/* САМА КОРОБКА */
+.admin-box {
+    background: #1a0b2e !important; /* Повністю непрозорий для надійності */
+    border: 2px solid #e91e63;
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+    max-height: 85vh;
+    overflow-y: auto !important;
+    position: relative;
+    /* Усуваємо будь-які конфлікти з дотиками */
+    touch-action: pan-y; 
+}
+
+/* КНОПКИ ТА ЕЛЕМЕНТИ ФОРМИ */
+.admin-box button, 
+.admin-box input, 
+.admin-box select {
+    pointer-events: auto !important; 
+    cursor: pointer !important;
+    position: relative;
+    z-index: 10;
+}
+
+/* Кнопка тригера (шестерня або що у тебе) */
+.dev-trigger {
+    z-index: 999998 !important;
+    pointer-events: auto !important;
+}
+
