@@ -359,16 +359,24 @@ window.scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
 // Сніг
 for(let i=0;i<25;i++){
-  let s=document.createElement("div");
-  s.className="snowflake";
-  s.innerHTML="❄️";
-  s.style.left=Math.random()*100+"vw";
-  s.style.animationDuration=5+Math.random()*10+"s";
-  s.style.fontSize=10+Math.random()*20+"px";
+  let s = document.createElement("div");
+  s.className = "snowflake";
+  s.innerHTML = "❄️";
+
+  // Випадкова позиція по X
+  s.style.left = Math.random() * 100 + "vw";
+
+  // Випадкова стартова позиція по Y, щоб сніг не "підстрибував"
+  s.style.top = Math.random() * 100 + "vh";
+
+  // Випадкова швидкість падіння
+  s.style.animationDuration = (5 + Math.random() * 10) + "s";
+
+  // Випадковий розмір сніжинки
+  s.style.fontSize = (10 + Math.random() * 20) + "px";
+
   document.body.appendChild(s);
 }
-
-
 
 // Перемикання вкладок
 function openTab(tabName) {
@@ -387,4 +395,5 @@ document.onkeydown = function(e) {
 </script>
 
 </body>
+
 </html>
